@@ -1,0 +1,12 @@
+[package]
+name = "cards-framework"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+strum = "0.24" # EnumIter
+strum_macros = "0.24" # EnumIter
+rand = "0.8.4" # Shuffle
+thiserror = "1.0"  # For creating errors myself
