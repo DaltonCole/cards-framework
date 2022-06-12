@@ -24,10 +24,7 @@ impl Deck {
 
         for suit in Suit::iter() {
             for value in Value::iter() {
-                cards.push(Card {
-                    suit: suit,
-                    value: value,
-                });
+                cards.push(Card { suit, value });
             }
         }
 

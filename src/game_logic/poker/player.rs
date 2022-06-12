@@ -7,7 +7,9 @@ pub struct Player {
 
 impl Player {
     pub fn new(starting_chips: u32) -> Player {
-        Player { hand: Vec::<Card>::new(), chips: starting_chips,
+        Player {
+            hand: Vec::<Card>::new(),
+            chips: starting_chips,
         }
     }
 }
