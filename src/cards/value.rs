@@ -39,7 +39,7 @@ impl Value {
 
 use std::fmt;
 impl fmt::Display for Value {
-    fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Value::Two => write!(f, "2"),
             Value::Three => write!(f, "3"),

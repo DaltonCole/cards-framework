@@ -1,7 +1,7 @@
 use cards_framework::cards::Card;
+use cards_framework::cards::Deck;
 use cards_framework::cards::Suit;
 use cards_framework::cards::Value;
-use cards_framework::cards::Deck;
 
 fn main() {
     let s4 = Card {

@@ -1,9 +1,9 @@
 use super::Card;
 use super::Suit;
 use super::Value;
-use strum::IntoEnumIterator;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
+use strum::IntoEnumIterator;
 
 #[derive(Debug)]
 pub struct Deck {
@@ -17,7 +17,6 @@ pub enum DeckError {
     NotEnoughCards(usize, usize),
 }
 
-
 impl Deck {
     /// Creates a new deck of 52 cards in [Suit](super::Suit) then [Value](super::Value) order
     pub fn new() -> Deck {
@@ -25,14 +24,14 @@ impl Deck {
 
         for suit in Suit::iter() {
             for value in Value::iter() {
-                cards.push( Card { suit: suit, value: value } );
+                cards.push(Card {
+                    suit: suit,
+                    value: value,
+                });
             }
         }
 
-        Deck {
-            cards,
-        }
-
+        Deck { cards }
     }
 
     /// Shuffles the **remainder** of the deck
@@ -65,7 +64,6 @@ impl Deck {
     /// ```
     pub fn count(&self) -> usize {
         (*self).cards.len()
-
     }
 
     /// Draws N card(s) from the top (back) of the deck.
@@ -92,17 +90,17 @@ impl Deck {
     /// let mut deck = Deck::new();
     /// assert_eq!(deck.draw_cards(100), Err(DeckError::NotEnoughCards(52, 100)));
     /// ```
-    pub fn draw_cards(&mut self, num: usize) -> Result<Vec::<Card>, DeckError> {
+    pub fn draw_cards(&mut self, num: usize) -> Result<Vec<Card>, DeckError> {
         if self.count() < num {
             return Err(DeckError::NotEnoughCards(self.count(), num));
-        } 
+        }
         Ok(self.cards.drain((self.count() - num)..).collect())
     }
 }
 
 use std::fmt;
 impl fmt::Display for Deck {
-    fn fmt(&self, f:&mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut s = String::new();
         for card in &self.cards {
             s += &format!("{} ", card);
