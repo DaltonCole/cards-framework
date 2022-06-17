@@ -77,4 +77,18 @@ impl PokerPlayer for BasicPlayer {
     fn num_chips(&self) -> u32 {
         self.chips
     }
+
+    /// Makes a random bet
+    ///
+    /// #Example
+    /// ```
+    /// use cards_framework::game_logic::poker;
+    /// # use cards_framework::game_logic::poker::PokerPlayer;
+    /// let num_chips = 9001;
+    /// let mut player = poker::BasicPlayer::new(num_chips);
+    /// player.make_bet();
+    /// ```
+    fn make_bet(&self) -> u32 {
+        rand::random::<u32>() % self.chips
+    }
 }
