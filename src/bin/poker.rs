@@ -6,6 +6,6 @@ fn main() {
     let num_players = 5;
     let mut players = Vec::<poker::BasicPlayer>::new();
     for _ in 0..num_players {
-        players.push(poker::BasicPlayer::new(starting_chips));
+        players.push(poker::BasicPlayer::new());
     }
 }
