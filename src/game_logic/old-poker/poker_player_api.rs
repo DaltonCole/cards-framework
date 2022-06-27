@@ -1,8 +1,3 @@
-
-struct PokerPlayerAPI {
-
-}
-
 pub trait PokerPlayerAPI {
 
 }

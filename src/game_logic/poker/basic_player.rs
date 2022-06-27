@@ -1,61 +1,38 @@
-use super::{PlayerAction, Poker, PokerPlayer};
-use crate::cards::Card;
+use super::{Action, Player, PlayerError, PlayerInterface, Table};
 
-pub struct BasicPlayer {
-    hand: Vec<Card>,
-}
+pub struct BasicPlayer {}
 
-impl PokerPlayer for BasicPlayer {
-    /// Creates a new player with an empty hand and starting_chips chips
+impl Player for BasicPlayer {
+    /// Creates a new player
     ///
     /// # Example
     /// ```
     /// use cards_framework::game_logic::poker;
-    /// use cards_framework::game_logic::poker::PokerPlayer;
     /// let player = poker::BasicPlayer::new();
     /// ```
     fn new() -> BasicPlayer {
-        BasicPlayer {
-            hand: Vec::<Card>::new(),
-        }
+        BasicPlayer {}
     }
 
-    /// Gives N cards to the player
-    ///
-    /// # Example
-    /// ```
-    /// use cards_framework::game_logic::poker;
-    /// # use cards_framework::game_logic::poker::PokerPlayer;
-    /// use cards_framework::cards::Deck;
-    /// use cards_framework::cards::Card;
-    ///
-    /// let mut player = poker::BasicPlayer::new();
-    /// let mut deck = Deck::new();
-    /// player.get_cards(&mut deck.draw_cards(2).unwrap());
-    /// ```
-    fn get_cards(&mut self, new_cards: &mut Vec<Card>) {
-        self.hand.append(new_cards);
-    }
-
-    /// Makes a random bet
-    fn make_bet(&self, num_chips: u32, call_amount: u32, _game: &Poker) -> PlayerAction {
+    /// Makes a random valid bet
+    fn player_action(&self, call_amount: u32, player_info: &PlayerInterface, _table: &Table, error: &Option<PlayerError>) -> Action {
         // Call, can't check
         if call_amount == 0 {
             match rand::random::<u8>() % 5 {
-                0 | 1 => return PlayerAction::Raise(rand::random::<u32>() % num_chips),
-                2 => return PlayerAction::Fold,
-                _ => return PlayerAction::Check,
+                0 | 1 => return Action::Raise(rand::random::<u32>() % player_info.num_chips()),
+                2 => return Action::Fold,
+                _ => return Action::Check,
             }
         }
         // Can't call, can check
         else {
-            if call_amount > num_chips {
-                return PlayerAction::Fold;
+            if call_amount > player_info.num_chips() {
+                return Action::Fold;
             } else {
                 match rand::random::<u8>() % 10 {
-                    0..=3 => return PlayerAction::Raise(rand::random::<u32>() % num_chips),
-                    4 => return PlayerAction::Fold,
-                    _ => return PlayerAction::Call,
+                    0..=3 => return Action::Raise(rand::random::<u32>() % player_info.num_chips()),
+                    4 => return Action::Fold,
+                    _ => return Action::Call,
                 }
             }
         }

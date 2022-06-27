@@ -1,8 +1,10 @@
 use std::cmp::min;
 use super::{Poker, PokerPlayer, PlayerAction, PlayerError};
+use crate::cards::Card;
 
 pub struct PokerPlayerInterface {
     pub player: Box<dyn PokerPlayer>,
+    hand: Vec<Card>,
     chips: u32,
     pub gambled_chips: u32,
     action: Option<PlayerAction>,
@@ -13,6 +15,7 @@ impl PokerPlayerInterface {
     pub fn new(player: Box<dyn PokerPlayer>, starting_chips: u32) -> PokerPlayerInterface {
         PokerPlayerInterface {
             player,
+            hand: Vec::new(),
             chips: starting_chips,
             gambled_chips: 0,
             action: None,
@@ -57,9 +60,17 @@ impl PokerPlayerInterface {
     ///
     /// PlayerError::CheckActionOnBet error is returned if the player checked when a bet was
     /// given
-    pub fn make_bet(&self, call_amount: u32, game: &Poker) -> Result<PlayerAction, PlayerError> {
+    pub fn make_bet(&mut self, mut call_amount: u32) -> Result<PlayerAction, PlayerError> {
+        // All in
+        if self.gambled_chips > 0 && self.chips == 0 {
+            Some(PlayerAction::Check);
+        }
 
-        match self.player.make_bet(self.chips, call_amount, game) {
+        // Get amount needed to call
+        call_amount -= self.gambled_chips;
+
+        // Get Action
+        match self.player.make_bet(self.chips, call_amount) {
             PlayerAction::Call => {
                 let bet_chips = min(call_amount, self.chips);
                 self.chips -= bet_chips;

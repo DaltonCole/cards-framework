@@ -57,9 +57,40 @@ impl Poker {
             self.new_round();
             // Deal cards
             self.deal();
-            // Make bets
-            self.make_bets(self.big_blind);
+            // Pre-Flop
+            if let Some(winning_player) = self.make_bets(self.big_blind, self.big_blind_player) {
+                self.award_winnings(winning_player);
+                continue;
+            }
+            // Flop
+            if let Some(winning_player) = self.make_bets(0, self.big_blind_player) {
+                self.award_winnings(winning_player);
+                continue;
+            }
+            // Turn
+            if let Some(winning_player) = self.make_bets(0, self.big_blind_player) {
+                self.award_winnings(winning_player);
+                continue;
+            }
+            // River
+            if let Some(winning_player) = self.make_bets(0, self.big_blind_player) {
+                self.award_winnings(winning_player);
+                continue;
+            }
+            // Showdown
+            let winners = self.determine_winners();
+            self.award_winnings_to_winners(&winners);
         }
+    }
+
+    /// Award winings to a SINGLE player. Applies anytime before the showdown
+    fn award_winnings(&mut self, winning_player: usize) {
+
+    }
+
+    /// Award winnings after the showdown
+    fn award_winnings_to_winners(&mut self, winning_players: Vec<usize>) {
+
     }
 
     /// Get the number of players that still has chips
@@ -129,11 +160,11 @@ impl Poker {
     ///
     /// If there is only one player remaining after bets are made, the index of the winning player
     /// is returned
-    fn make_bets(&mut self, bet: mut u32, last_betting_player: mut usize) -> Option<usize> {
+    fn make_bets(&mut self, mut bet: u32, mut last_betting_player: usize) -> Option<usize> {
         let mut next_player = self.big_blind_player;
         loop {
             // Go to next player
-            next_player = self.next_living_player();
+            next_player = self.next_living_player(next_player);
 
             // Only one player left
             if self.num_alive_players() <= 1 {
@@ -149,16 +180,18 @@ impl Poker {
                 return None;
             }
             // Get player's action
-            let player_needs_to_bet_amount = bet - 
-            self.players[next_player].make_bets(self.pot_size, bet - self.players[], )
-
-
-
-
+            loop {
+                match self.players[next_player].make_bet(bet) {
+                    Ok(PlayerAction::Raise(num)) => {
+                        bet += num;
+                        last_betting_player = next_player;
+                        break;
+                    }, Err(_) => { // Re loop 
+                    }, _ => { break; }
+                }
+            }
         }
     }
-
-
 }
 
 #[cfg(test)]
