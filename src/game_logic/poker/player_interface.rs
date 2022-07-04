@@ -1,4 +1,4 @@
-use super::{Action, Player, Table};
+use super::{Action, Player, PlayerError, History, BasicPlayer};
 use crate::cards::Card;
 use std::cmp::min;
 
@@ -27,6 +27,10 @@ impl PlayerInterface {
         self.action = None;
     }
 
+    pub fn get_hand(&self) -> Vec<Card> {
+        self.hand
+    }
+
     pub fn take_blind(&mut self, blind_amount: u32) {
         self.gambled_chips = min(blind_amount, self.chips);
         self.chips -= self.gambled_chips;
@@ -48,13 +52,14 @@ impl PlayerInterface {
         &self.action
     }
 
-    pub fn player_action(&mut self, bet_amount: u32, table: &Table) -> Action {
-        let err = None;
+    pub fn player_action(&mut self, bet_amount: u32, history: &History) -> Action {
+        let err: Option<PlayerError> = None;
         let call_amount = bet_amount - self.gambled_chips;
         loop {
-            self.action = Some(self.player.player_action(call_amount, &self, &table, &err));
-            // TODO: make sure this is a valid action
-            return self.action.unwrap();
+            //match self.player.player_action(self.player, &self.hand, self.chips, self.gambled_chips, call_amount, &history, &err) {
+            let action = Player::player_action(self.player, &self.hand, self.chips, self.gambled_chips, call_amount, &history, &err);
+            // TODO, make sure actions are valid
+            return action;
         }
     }
 }

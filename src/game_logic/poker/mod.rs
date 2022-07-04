@@ -19,3 +19,6 @@ pub use actions::Action;
 
 pub mod game;
 pub use game::Game;
+
+pub mod history;
+pub use history::{History, TurnHistory, RoundHistory, PlayerHistory};

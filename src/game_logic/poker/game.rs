@@ -1,10 +1,11 @@
-use super::{Player, PlayerInterface, Action, PlayerError, Table};
+use super::{Player, PlayerInterface, Action, History, Table};
 use crate::cards::{Deck, DeckError};
 
 pub struct Game {
     table: Table,
     deck: Deck,
     small_blind_amount: u32,
+    history: History,
 }
 
 impl Game {
@@ -14,6 +15,7 @@ impl Game {
             table: Table::new(),
             deck: Deck::new(),
             small_blind_amount,
+            history: History::new(),
         }
     }
 
@@ -25,6 +27,9 @@ impl Game {
         let mut starting_player = 0;
 
         while self.table.players.len() > 1 {
+            // Start a new turn history
+            self.history.new_turn();
+
             // Make a new shuffled deck
             self.shuffle_entire_deck();
 
@@ -70,6 +75,10 @@ impl Game {
     fn pre_flop(&mut self, first_player: usize) -> Option<usize> {
         let mut last_raise_player: Option<usize> = None;
         let mut round_betting_amount = 0;
+
+        // New RoundHistory
+        self.history.new_round();
+
         while self.is_round_ended() == false {
             for player_index in 0..self.table.players.len() {
                 // Get the index of player who should perform an action next
@@ -81,10 +90,13 @@ impl Game {
                 }
 
                 // Player does action
-                if let Action::Raise(raise_amount) = self.table.players[player_index].player_action(round_betting_amount, &self.table) {
+                if let Action::Raise(raise_amount) = self.table.players[player_index].player_action(round_betting_amount, &self.history) {
                     round_betting_amount += raise_amount;
                     last_raise_player = Some(player_index);
                 }
+
+                // Add player action to history
+                self.history.add_player_history(&self.table.players[player_index], player_index, false);
             }
         }
         return self.is_there_one_person_remaining();
