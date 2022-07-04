@@ -1,5 +1,5 @@
 use cards_framework::game_logic::poker;
-use cards_framework::game_logic::poker::PokerPlayer;
+use cards_framework::game_logic::poker::{Player, BasicPlayer};
 
 fn main() {
     let starting_chips = 10000;

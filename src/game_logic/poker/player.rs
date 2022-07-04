@@ -11,7 +11,7 @@ pub trait Player: {
     ///     community cards
     /// * `error`: If you tried to make an invalid move, this will be populated with the error
     // TODO: pass cards into this as immutable
-    fn player_action(player: Box<dyn Player>, hand: &Vec<Card>, chips: u32, gamled_chips: u32, call_amount: u32, game_history: &History, error: &Option<PlayerError>) -> Action
+    fn player_action(player: &Box<dyn Player>, hand: &Vec<Card>, chips: u32, gamled_chips: u32, call_amount: u32, game_history: &History, error: &Option<PlayerError>) -> Action
         where
             Self: Sized;
 }

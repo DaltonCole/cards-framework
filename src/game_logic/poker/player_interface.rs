@@ -28,7 +28,7 @@ impl PlayerInterface {
     }
 
     pub fn get_hand(&self) -> Vec<Card> {
-        self.hand
+        self.hand.clone()
     }
 
     pub fn take_blind(&mut self, blind_amount: u32) {
@@ -57,7 +57,7 @@ impl PlayerInterface {
         let call_amount = bet_amount - self.gambled_chips;
         loop {
             //match self.player.player_action(self.player, &self.hand, self.chips, self.gambled_chips, call_amount, &history, &err) {
-            let action = Player::player_action(self.player, &self.hand, self.chips, self.gambled_chips, call_amount, &history, &err);
+            let action: Action = Player::player_action(&self.player, &self.hand, self.chips, self.gambled_chips, call_amount, &history, &err);
             // TODO, make sure actions are valid
             return action;
         }

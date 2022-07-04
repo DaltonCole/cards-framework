@@ -1,7 +1,7 @@
 use super::Suit;
 use super::Value;
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub struct Card {
     pub suit: Suit,
     pub value: Value,
